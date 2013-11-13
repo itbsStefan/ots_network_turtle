@@ -12,6 +12,57 @@ import math
 c = math.sqrt(a**2 + b**2)
 print c
 
+t1 = turtle.Turtle()
+
+def switchpen():
+  global t1
+  if t1.isdown():
+    t1.pu()
+  else:
+    t1.pd()
+
+
+
+t1.shape("turtle")
+t1.color("blue","purple")
+t1.resizemode("auto")
+t1.pensize(2)
+t1.speed(16)
+t1.up()
+t1.goto(-80, -340)
+t1.down()
+
+t2 = turtle.getturtle()
+t2.up()
+t2.shape("turtle")
+t2.color("red","yellow")
+t2.resizemode("auto")
+t2.speed(8)
+t2.setheading(t2.towards(t1))
+t2.goto(280, 40)
+t2.down()
+
+count = 1
+while t2.distance(t1) > 4:
+  print count
+  t1.fd(3.5)
+  t1.lt(0.6)
+  t2.setheading(t2.towards(t1))
+  t2.fd(3.3)
+  if count > 200:
+    t2.fd(1.3)
+  if count % 20 == 0:
+      t1.stamp()
+      t2.stamp()
+      switchpen()
+  count += 1
+
+turtle.up()
+turtle.setheading(270)
+turtle.forward(15)
+turtle.setheading(180)
+turtle.forward(5)
+
 def hexagon(s1=10, s2=60):
 	print "x",turtle.xcor(),"  y",turtle.ycor()
 	for i in range(6):
@@ -95,7 +146,11 @@ def togglePen():
 		turtle.penup()
 	else:
 		turtle.pendown()
-	print "Penstatus",turtle.pen()["pendown"]
+	if t2.pen()["pendown"]:
+		t2.penup()
+	else:
+		t2.pendown()
+	print "Penstatus t2",t2.pen()["pendown"]
 
 def dot():
 	turtle.dot()
@@ -131,7 +186,7 @@ turtle.onkey(turtleDown, "Down")# 270
 turtle.onkey(turtleLeft, "Left")# 180
 turtle.onkey(turtleRight, "Right")#  0
 turtle.onkey(togglePen, "p")
-turtle.onkey(dot, "d")
+turtle.onkey(dot, "o")
 turtle.onkey(lengthPlus, "bracketright")
 turtle.onkey(lengthMinus, "slash")
 turtle.onkey(move, "m")
@@ -145,7 +200,50 @@ w=turtle.Screen()
 #help(w)
 #w.bind("<KeyPress>", callback)
 
-turtle.listen()
+run = True
+def stop():
+  global run
+  run = False
+turtle.onkey(stop, "q")
 
+#while run:
+w.onclick(turtle.goto)
+
+
+def moveT2(length, direction):
+	print "taste gedrückt",length ,direction
+	#t2.setheading(direction)
+	#t2.forward(length)
+	t1.setheading(direction)
+	t1.forward(length)
+
+def turtle2Up():
+	moveT2(length, 90)
+
+def turtle2Left():
+	moveT2(length, 180)
+
+def turtle2Right():
+	moveT2(length, 0)
+
+def turtle2Down():
+	moveT2(length, 270)
+
+turtle.onkey(turtle2Up, "w")  #  90
+turtle.onkey(turtle2Down, "s")# 270
+turtle.onkey(turtle2Left, "a")# 180
+turtle.onkey(turtle2Right, "d")#  0
+
+
+t1.goto(-50, 0)
+t1.setheading(0)
+t2.goto(50, 0)
+t2.setheading(180)
+
+print "use curserkeys to move turtle1 and  w|a|s|d for tutle2 (purple)"
+
+
+
+turtle.listen()
 turtle.exitonclick()
 
