@@ -9,6 +9,8 @@ w=turtle.Screen()
 t = turtle.getturtle()
 cv = turtle.getcanvas()
 
+root = turtle.Screen()._root
+
 length = 10.0
 turtle.register_shape("dreieck", ((5,-3),(0,5),(-5,-3)))
 print w.getshapes()
@@ -25,7 +27,7 @@ t1.setup(50,None, head = 180, speed=5, size = 2)
 
 t2 = Oturtle("t2", "turtle", True, ("red","yellow"))
 t2.setup(-50, None, 0, 3, 3)
-
+t2.pu()
 
 for s in w.turtles():
   name = None
@@ -112,14 +114,15 @@ print "use curserkeys to move turtle1 and  w|a|s|d for tutle2 (purple) and x for
 
 
 def testfun():
-  x = t2.pen()["pendown"]
+  x = t2.pen()
   t2.stamp()
   t2.pendown()
   t2.circle(100)
-  t2.pen()["pendown"] = x
+  t2.pen(x)
 
 t2.onkey(testfun,"j")
-testfun()
+w.onkey(testfun, "k")
+
 
 #import Tkinter
 #r = Tkinter.Tk()
@@ -165,8 +168,39 @@ w.onkey(w.bye, "x")
 #th.setDaemon(1)
 #th.start()
 
-#root.mainloop()
 
-turtle.mainloop()
+oldColor = None
+def gruen(e):
+  global oldColor
+  oldColor = t2.color()
+  t2.color("black","green")
+  root.after(3000, cback)
+
+def cback():
+  global oldColor
+  if type(oldColor).__name__ == "tuple":
+    t2.color(oldColor[0],oldColor[1])
+
+root.bind("g", gruen)
+
+fwd=1
+def task():
+    global fwd
+    t1.penup()
+    t1.forward(fwd)
+    t1.stamp()
+    t1.right(33)
+    fwd += 1
+    root.after(100, task)  # reschedule event in 1 milli second
+
+root.after(1, task)
+
+
+
+
+
+root.mainloop()
+
+#turtle.mainloop()
 #w.mainloop()
 
