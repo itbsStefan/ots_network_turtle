@@ -95,6 +95,22 @@ class Oturtle(Turtle):
     self.setheading(270)
     self.forward(10)
 
+  def togglePen(self):
+    if self.isdown():
+      self.penup()
+    else:
+      self.pendown()
+
+  def bindKeys(self, up, right, down, left, togglePen=False):
+    self._screen.onkey(self.hoch, up)
+    self._screen.onkey(self.rechts, right)
+    self._screen.onkey(self.runter, down)
+    self._screen.onkey(self.links, left)
+    if togglePen:
+      self._screen.onkey(self.togglePen, togglePen)
+
+
+
   def cursorKeys(self,keys):
     funs = ["hoch", "rechts", "runter", "links", "testfun"]
     t=0
@@ -154,9 +170,14 @@ class Oturtle(Turtle):
 
 
 
+if __name__ == "__main__":
 
+  ot = Oturtle("turtle", "turtle", True, ("blue","red"))
+  ot.setup(50,None, head = 180, speed=5, size = 2)
+  ot._screen.listen()
+  ot.bindKeys("w", "d", "x", "a", "p")
 
-
+  ot._root.mainloop()
 
 
 
