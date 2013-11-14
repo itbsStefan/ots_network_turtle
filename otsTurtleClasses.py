@@ -10,12 +10,14 @@ class Oturtle(Turtle):
   name = None
   cv = None
   _keys = None
+  _root = None
 
   def randomString(self, length = 5):
     return "".join(choice(lowercase) for i in range(length))
 
   def __init__(self,name = "", shape = "turtle", visible = False, colors = None):
     Turtle.__init__(self, shape, visible=visible)
+    self._root = self._screen._root
     self.cv = Turtle._screen._canvas
     if name =="":
       self.name = self.randomString(8)
@@ -65,6 +67,7 @@ class Oturtle(Turtle):
       def eventfun(event):
         fun()
       self.cv.bind("<KeyRelease-%s>" % key, eventfun)
+      print self.name, "bindKey", key
 
   def onkey(self, fun, key):
     """Bind fun to key-release event of key.
@@ -72,9 +75,91 @@ class Oturtle(Turtle):
     if fun == None:
       if key in self._keys:
         self._keys.remove(key)
-      elif key not in self._keys:
-        self._keys.append(key)
+    else:# key not in self._keys:
+      self._keys.append(key)
       self._onkey(fun, key)
+
+  def hoch(self):
+    self.setheading(90)
+    self.forward(10)
+
+  def links(self):
+    self.setheading(180)
+    self.forward(10)
+
+  def rechts(self):
+    self.setheading(0)
+    self.forward(10)
+
+  def runter(self):
+    self.setheading(270)
+    self.forward(10)
+
+  def cursorKeys(self,keys):
+    funs = ["hoch", "rechts", "runter", "links", "testfun"]
+    t=0
+    print type(keys).__name__
+    if type(keys).__name__ == "tuple":
+      print len(keys), keys
+      for f in funs:
+        if t < len(keys):
+          break
+        self._onkey(eval("self."+f+"()"), keys[t])
+        print "self.",f,"()",keys[t]
+        t +=1
+    else:
+      print "cursorKeys must be a tuple of 4 or more Chars! (up rigth down left action)"
+
+  def testfun(self):
+    x = self.pen()
+    self.stamp()
+    self.pendown()
+    self.home()
+    self.pen(x)
+
+
+
+
+
+
+
+
+
+
+  def eventCatcher(self,event):
+    print "event:", event.keycode, type(event).__doc__
+    if type(event).__name__:
+      pass
+
+
+  oldColor = None
+  def gruen(self,e):
+    self.oldColor
+    print e
+    self.oldColor = self.color()
+    self.color("violet","green")
+    self._root.after(3000, self.cback)
+
+  def cback(self):
+    self.oldColor
+    if type(self.oldColor).__name__ == "tuple":
+      self.color(self.oldColor[0],self.oldColor[1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,6 +28,7 @@ t1.setup(50,None, head = 180, speed=5, size = 2)
 t2 = Oturtle("t2", "turtle", True, ("red","yellow"))
 t2.setup(-50, None, 0, 3, 3)
 t2.pu()
+#t2.cursorKeys(("w","d","s","a","e")) #(up rigth down left action)
 
 for s in w.turtles():
   name = None
@@ -120,7 +121,7 @@ def testfun():
   t2.circle(100)
   t2.pen(x)
 
-t2.onkey(testfun,"j")
+t2.onkey(t2.testfun,"j")
 w.onkey(testfun, "k")
 
 
@@ -172,6 +173,7 @@ w.onkey(w.bye, "x")
 oldColor = None
 def gruen(e):
   global oldColor
+  print e
   oldColor = t2.color()
   t2.color("black","green")
   root.after(3000, cback)
