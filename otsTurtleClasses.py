@@ -7,7 +7,20 @@ from string import lowercase # Rerurns 'abcdefghijklmnopqrstuvwxyz'
 
 class Oturtle(Turtle):
 
-  name = None
+  _x = ""
+  def getx(self): return self._x
+  def setx(self, value): self._x = value
+  def delx(self): del self._x
+  x = property(getx, setx, delx, "I'm the 'x' property.")
+
+  @property
+  def name(self):
+    return self._name
+  @name.setter
+  def name(self, value):
+    self._name = value
+  _name = None
+  _ground = None # is the used Turtle._screen instance of Screen()
   cv = None
   _keys = None
   _root = None
@@ -20,14 +33,30 @@ class Oturtle(Turtle):
     self._root = self._screen._root
     self.cv = Turtle._screen._canvas
     if name =="":
-      self.name = self.randomString(8)
+      self._name = self.randomString(8) # zufälliges setzen ohne Prüfung
     else:
-      self.name = name
+      self.name = name                  # über die Setter wird geprüft
     if colors == None:
       self.color("black", "pink")
     else:
       self.color(colors[0],colors[1])
     self._keys = []
+    self._ground = self._screen
+
+  @property
+  def ground(self):
+    return self._ground
+  @ground.setter
+  def ground(self, value):
+    self._ground = value
+  @ground.deleter
+  def ground(self):
+    del self._ground
+  @property
+  def win(self):
+    return self._root
+
+
 
   def printName(self):
     print self.__class__.__name__, self.name
@@ -101,15 +130,18 @@ class Oturtle(Turtle):
     else:
       self.pendown()
 
-  def bindKeys(self, up, right, down, left, togglePen=False):
+  def bindKeys(self, up, right, down, left, togglePen=False, action=False):
     self._screen.onkey(self.hoch, up)
     self._screen.onkey(self.rechts, right)
     self._screen.onkey(self.runter, down)
     self._screen.onkey(self.links, left)
     if togglePen:
       self._screen.onkey(self.togglePen, togglePen)
-
-
+    if action:
+      self._screen.onkey(self.gruen, action)
+    self._screen.listen()
+    print self.name, "kann mit den Tasten: hoch="+up+" rechts="+right+" runter="+down+" links="+left+" bewegt,"
+    print "mit "+str(togglePen)+" der Stift gesetzt und falls action="+str(action)+" ausgeführt werden."
 
   def cursorKeys(self,keys):
     funs = ["hoch", "rechts", "runter", "links", "testfun"]
@@ -123,15 +155,16 @@ class Oturtle(Turtle):
         self._onkey(eval("self."+f+"()"), keys[t])
         print "self.",f,"()",keys[t]
         t +=1
+      self._screen.listen()
     else:
       print "cursorKeys must be a tuple of 4 or more Chars! (up rigth down left action)"
 
   def testfun(self):
-    x = self.pen()
+    #x = self.pen()
     self.stamp()
-    self.pendown()
+    #self.pendown()
     self.home()
-    self.pen(x)
+    #self.pen(x)
 
 
 
@@ -143,41 +176,56 @@ class Oturtle(Turtle):
 
 
   def eventCatcher(self,event):
-    print "event:", event.keycode, type(event).__doc__
+    """ Try t.win.bind("<KeyPress>", h.callback)
+        to find a String to bind the key
+    """
+    print "EventCatcher:",event.keysym, event.keycode, "x:",event.x,event.x_root
     if type(event).__name__:
       pass
 
 
-  oldColor = None
+  __oldColor = None
   def gruen(self,e):
-    self.oldColor
-    print e
-    self.oldColor = self.color()
+    print e.char, e.widget, e.time, e.x, e.x_root,e.keysym, e.keycode
+    self.__oldColor = self.color()
     self.color("violet","green")
     self._root.after(3000, self.cback)
 
   def cback(self):
-    self.oldColor
-    if type(self.oldColor).__name__ == "tuple":
-      self.color(self.oldColor[0],self.oldColor[1])
+    if type(self.__oldColor).__name__ == "tuple":
+      self.color(self.__oldColor[0],self.__oldColor[1])
 
+  def nikulaushaus(self):
+    pass
+  def goBackInView(self):
+    pass
 
-
-
-
-
+  __spiraleschritt=1
+  def spirale(self):
+    self.forward(self.__spiraleschritt)
+    self.right(33)
+    self.__spiraleschritt += 1
+    self._root.after(1, self.spirale)  # reschedule event in 1 milli second
 
 
 
 
 if __name__ == "__main__":
-
-  ot = Oturtle("turtle", "turtle", True, ("blue","red"))
+  print 70*"-"
+  ot = Oturtle("Schildkröte", "turtle", True, ("blue","red"))
   ot.setup(50,None, head = 180, speed=5, size = 2)
-  ot._screen.listen()
-  ot.bindKeys("w", "d", "x", "a", "p")
 
-  ot._root.mainloop()
+  ot.bindKeys("u", "k", "j", "h", "p") # enthält self._screen.listen()
+
+  ot.win.bind("g", ot.gruen) # gruen hat noch den Eventparameter daher direkt
+  ot.ground.onkey(ot.spirale, "s")
+  ot.ground.onkey(ot.testfun, "Home") # geht nur wenn listen() aufgerufen war/wird
+  print "Tasten s g und Pos1 führen Methoden der",ot.name,"aus."
+  ot.ground.onkey(ot.ground.bye, "x")
+  print "x schließt das Fenster"
+
+  ot.win.bind("<KeyPress>", ot.eventCatcher)
+  ot.win.mainloop()
 
 
 

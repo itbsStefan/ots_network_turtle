@@ -6,6 +6,16 @@ s=60
 #turtle.forward(3*l)
 
 
+def show(dictionary):
+  print "=========================="
+  print "=  Turtle Configuration  ="
+  print "=========================="
+  for key in sorted(dictionary.keys()):
+    print key, ":", dictionary[key]
+  print "=========================="
+  print
+
+
 a=2
 b=4
 import math
@@ -41,6 +51,7 @@ t2.speed(8)
 t2.setheading(t2.towards(t1))
 t2.goto(280, 40)
 t2.down()
+
 
 count = 1
 while t2.distance(t1) > 4:
@@ -240,6 +251,8 @@ t1.setheading(0)
 t2.goto(50, 0)
 t2.setheading(180)
 
+
+show(turtle._CFG)
 print "use curserkeys to move turtle1 and  w|a|s|d for tutle2 (purple)"
 
 
