@@ -24,6 +24,7 @@ class Oturtle(Turtle):
   cv = None
   _keys = None
   _root = None
+  __inAction = False
 
   def randomString(self, length = 5):
     return "".join(choice(lowercase) for i in range(length))
@@ -186,14 +187,21 @@ class Oturtle(Turtle):
 
   __oldColor = None
   def gruen(self,e):
+    if self.__inAction & 2:
+      print self.name, "startet erst wieder die Methode wenn vorhergehende Aufruf abgearbeitet ist"
+      return
+    self.__inAction = self.__inAction | 2
     print e.char, e.widget, e.time, e.x, e.x_root,e.keysym, e.keycode
     self.__oldColor = self.color()
     self.color("violet","green")
     self._root.after(3000, self.cback)
 
   def cback(self):
-    if type(self.__oldColor).__name__ == "tuple":
+    if isinstance(self.__oldColor, tuple): 
+    #if type(self.__oldColor).__name__ == "tuple": # if isinstance(sf, (int, float)):
       self.color(self.__oldColor[0],self.__oldColor[1])
+      self.__oldColor = None
+    self.__inAction = self.__inAction & 253
 
   def nikulaushaus(self):
     pass
