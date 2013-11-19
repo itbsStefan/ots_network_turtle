@@ -2,6 +2,7 @@
 import helper as h
 import turtle
 from otsTurtleClasses import Oturtle
+import asyn
 
 print 10*"-=","Start Main",10*"=-"
 
@@ -63,7 +64,7 @@ w.onkey(testfun, "t")
 w.onkey(w.bye, "x")
 
 h.show(turtle._CFG)
-print "use turtlekeys to move, ö ä o space h t for Actions and x for close the Window"
+print "use turtlekeys to move, v b m o space h t for Actions and x for close the Window"
 
 
 oldColor = None
@@ -82,7 +83,7 @@ def cback():
 root.bind("g", gruen)
 
 fwd=1
-def task(e):
+def task():
     global fwd
     ot.penup()
     ot.forward(fwd)

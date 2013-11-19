@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+from random import choice    # Choose a random element from a non-empty sequence
+from random import randint   # Return random integer in range [a, b], including both end points
+from string import lowercase # Rerurns 'abcdefghijklmnopqrstuvwxyz'
+
+def randomString(self, length = 5):
+  return "".join(choice(lowercase) for i in range(length))
+
+
 def show(dictionary, title = "Turtle Configuration"):
   #print "%03d - |%7s|" % (title)
   l = len(title)+6
