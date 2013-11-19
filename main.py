@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 import helper as h
 import turtle
 from otsTurtleClasses import Oturtle
