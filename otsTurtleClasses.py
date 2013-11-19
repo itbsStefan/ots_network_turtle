@@ -87,28 +87,6 @@ class Oturtle(Turtle):
     self.goto(x,y)
     self.down()
 
-  def _onkey(self, fun, key):
-    """Bind fun to key-release event of key.
-    Canvas must have focus. See method listen
-    """
-    if fun is None:
-      self.cv.unbind("<KeyRelease-%s>" % key, None)
-    else:
-      def eventfun(event):
-        fun()
-      self.cv.bind("<KeyRelease-%s>" % key, eventfun)
-      print self.name, "bindKey", key
-
-  def onkey(self, fun, key):
-    """Bind fun to key-release event of key.
-    """
-    if fun == None:
-      if key in self._keys:
-        self._keys.remove(key)
-    else:# key not in self._keys:
-      self._keys.append(key)
-      self._onkey(fun, key)
-
   def hoch(self):
     self.setheading(90)
     self.forward(10)
@@ -131,7 +109,28 @@ class Oturtle(Turtle):
     else:
       self.pendown()
 
-  def bindKeys(self, up, right, down, left, togglePen=False, action=False):
+  def testfun(self):
+    #x = self.pen()
+    self.stamp()
+    #self.pendown()
+    self.home()
+    #self.pen(x)
+
+  def bindKeys(self, up, right=None, down=None, left=None, togglePen=False, action=False):
+    """ up right down left togglePen action
+      (up, right, down, left) as tuple in first parameter
+    """
+    if isinstance(up, tuple): 
+      print len(keys), keys
+      if len(up) > 4:
+        left = up[3]
+        down = up[2]
+        right= up[1]
+        up = up[0]
+      else:
+        print "cursorKeys must be a tuple of 4 or more Chars! (up rigth down left action)"
+        return
+
     self._screen.onkey(self.hoch, up)
     self._screen.onkey(self.rechts, right)
     self._screen.onkey(self.runter, down)
@@ -139,33 +138,11 @@ class Oturtle(Turtle):
     if togglePen:
       self._screen.onkey(self.togglePen, togglePen)
     if action:
-      self._screen.onkey(self.gruen, action)
+      self._screen.onkey(self.spirale, action)
     self._screen.listen()
     print self.name, "kann mit den Tasten: hoch="+up+" rechts="+right+" runter="+down+" links="+left+" bewegt,"
     print "mit "+str(togglePen)+" der Stift gesetzt und falls action="+str(action)+" ausgeführt werden."
 
-  def cursorKeys(self,keys):
-    funs = ["hoch", "rechts", "runter", "links", "testfun"]
-    t=0
-    print type(keys).__name__
-    if type(keys).__name__ == "tuple":
-      print len(keys), keys
-      for f in funs:
-        if t < len(keys):
-          break
-        self._onkey(eval("self."+f+"()"), keys[t])
-        print "self.",f,"()",keys[t]
-        t +=1
-      self._screen.listen()
-    else:
-      print "cursorKeys must be a tuple of 4 or more Chars! (up rigth down left action)"
-
-  def testfun(self):
-    #x = self.pen()
-    self.stamp()
-    #self.pendown()
-    self.home()
-    #self.pen(x)
 
 
 
