@@ -2,7 +2,7 @@
 import helper as h
 import turtle
 from otsTurtleClasses import Oturtle
-import asyn
+
 
 print 10*"-=","Start Main",10*"=-"
 
@@ -20,6 +20,7 @@ turtle.register_shape("dreieck", ((5,-3),(0,5),(-5,-3)))
 print w.getshapes()
 ot = Oturtle("dreieck","dreieck")
 #ot.showturtle()
+
 print "variable ot ist Turtle:",ot.name
 
 t1 = Oturtle("t1", "turtle", True, ("blue","purple"))
@@ -82,6 +83,7 @@ def cback():
     ot.color(oldColor[0],oldColor[1])
 root.bind("g", gruen)
 
+
 fwd=1
 def task():
     global fwd
@@ -95,6 +97,57 @@ def task():
 root.bind("s", gruen)
 
 root.after(1, task)
+
+import asyncore
+import logging
+from chat_echo import *
+
+f= '%(name)s: %(message)s'
+logging.basicConfig(level=logging.DEBUG,format=f)
+
+address = ('localhost', 0) # let the kernel give us a port
+server = EchoServer(address)
+ip, port = server.address # find out what port we were given
+# write the port in a file to grab it from other scripts
+fp = open('PortAsynTest.txt', 'w')
+fp.write(str(port).encode("utf-8"))
+fp.close
+fp = None
+
+asynloop = False
+loop_counter = 0
+def asyntask():
+  global loop_counter, asynloop, logging
+  loop_counter += 1
+  #logging.debug('--->loop_counter=%s', loop_counter, str(asyncore.socket_map))
+  #print "asyntask", loop_counter
+  asyncore.loop(timeout=0.1, count=1)
+  if asynloop:
+    root.after(100, asyntask)  # reschedule event in 1 milli second
+
+def asynloopStart(event=None):
+  global asynloop,ip, port
+  print
+  print "asynloopStart EchoServer is on",ip, port, "already running"
+  print "Press c to start a EchoClient with a hello message or run from an other console"
+  print "<python Clientchat_echo.py lorem.txt> to send massive text!"
+  print 7*"¸,ø¤º°`°º¤ø,"
+  asynloop = True
+  root.after(1, asyntask)
+def asynloopStop(event=None):
+  global asynloop
+  print "asynloopStops now (Messages of clients will processed after restart Loop!)"
+  asynloop = False
+root.bind("y", asynloopStart)
+root.bind("Y", asynloopStop)
+
+def asynClientTask(event=None):
+  global ip, port
+  print "call EchoClient", ip, port
+  client = EchoClient(ip, port, message="Hallo")
+
+root.after(3, asynloopStart)
+root.bind("c", asynClientTask)
 
 root.mainloop()
 
