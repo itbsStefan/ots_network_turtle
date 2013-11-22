@@ -195,6 +195,45 @@ class Oturtle(Turtle):
 
 
 
+def threadTest():
+  import threading
+  import time
+  print "Code für TK Event in ein Thread einmalig mit 1 oder 2 für Endlos, 0 für Stop"
+  def ping():
+    global loop
+    while True:
+      time.sleep(1)
+      if loop:
+        nextPing()
+  def gotPing(event):
+    global loop
+    print "gotPing",event,loop
+    import turtle
+    t = turtle.getturtle()
+    t.right(90)
+    t.pd()
+    t.forward(100)
+    t.pu()
+
+  def nextPing(event = None):
+    global ot
+    ot._root.event_generate('<<Ping>>', when='tail')
+  def stopPing(event = None):
+    global loop
+    loop = False
+  def startPing(event = None):
+    global loop
+    loop = True
+
+  ot._root.bind('0',stopPing)
+  ot._root.bind('1',nextPing)
+  ot._root.bind('2',startPing)
+  ot._root.bind('<<Ping>>', gotPing)
+
+  th = threading.Thread(target=ping)
+  th.setDaemon(1)
+  th.start()
+
 if __name__ == "__main__":
   print 70*"-"
   ot = Oturtle("Schildkröte", "turtle", True, ("blue","red"))
@@ -208,6 +247,9 @@ if __name__ == "__main__":
   print "Tasten s g und Pos1 führen Methoden der",ot.name,"aus."
   ot.ground.onkey(ot.ground.bye, "x")
   print "x schließt das Fenster"
+
+  loop = False
+  threadTest()
 
   ot.win.bind("<KeyPress>", ot.eventCatcher)
   ot.win.mainloop()

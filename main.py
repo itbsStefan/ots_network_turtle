@@ -98,6 +98,8 @@ root.bind("s", gruen)
 
 root.after(1, task)
 
+
+
 import asyncore
 import logging
 from chat_echo import *
