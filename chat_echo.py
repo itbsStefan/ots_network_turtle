@@ -11,14 +11,17 @@ class EchoServer(asyncore.dispatcher):
         asyncore.dispatcher.__init__(self)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.bind(address)
-        self.address = self.socket.getsockname()
+        self.address = self.socket.getsockname() #  info is a pair (hostaddr, port)
         self.listen(5)
         return
 
     def handle_accept(self):
         # Called when a client connects to our socket
-        client_info = self.accept()
+        client_info = self.accept() # info is a pair (hostaddr, port).
+        # Return a new socket representing the connection
         EchoHandler(sock=client_info[0])
+        # calls Object asynchat.async_chat.__init__(self, sock=hostaddr)
+
         # We only want to deal with one client at a time,
         # so close as soon as we set up the handler.
         # Normally you would not do this and the server

@@ -12,15 +12,11 @@ root = w._root
 cv = turtle.getcanvas()
 #t = turtle.getturtle()
 
-
-length = 10.0
-
 # setup some turtles
 turtle.register_shape("dreieck", ((5,-3),(0,5),(-5,-3)))
 print w.getshapes()
 ot = Oturtle("dreieck","dreieck")
 #ot.showturtle()
-
 print "variable ot ist Turtle:",ot.name
 
 t1 = Oturtle("t1", "turtle", True, ("blue","purple"))
@@ -60,14 +56,16 @@ def testfun():
 # global key event for turtle window
 turtle.onkey(dot, "o")
 turtle.onkey(stamp, "space")
-t2._screen.onkey(t2.testfun,"h")
 w.onkey(testfun, "t")
 w.onkey(w.bye, "x")
+
+# extra key events for oturtles on window
+t2._screen.onkey(t2.testfun,"h")
 
 h.show(turtle._CFG)
 print "use turtlekeys to move, v b m o space h t for Actions and x for close the Window"
 
-
+# bind a callback on time
 oldColor = None
 def gruen(e):
   global oldColor
@@ -83,9 +81,9 @@ def cback():
     ot.color(oldColor[0],oldColor[1])
 root.bind("g", gruen)
 
-
+# 
 fwd=1
-def task():
+def task(dummyevent=None):
     global fwd
     ot.penup()
     ot.forward(fwd)
@@ -94,9 +92,10 @@ def task():
     fwd += 1
     if fwd < 100:
       root.after(100, task)  # reschedule event in 1 milli second
-root.bind("s", gruen)
-
-root.after(1, task)
+    else:
+      fwd = 0
+root.bind("i", task)# start on keyevent
+root.after(1, task) # autostart
 
 
 
@@ -118,6 +117,7 @@ fp = None
 
 asynloop = False
 loop_counter = 0
+print "asyntask needs to be started the asyncore.loop() with Key y Port:",port
 def asyntask():
   global loop_counter, asynloop, logging
   loop_counter += 1
@@ -179,36 +179,3 @@ root.mainloop()
 
 
 
-
-
-
-#import threading, time
-#import Tkinter
-
-#root = Tkinter.Tk()
-##root = turtle.getcanvas()
-#def ping():
-#  while 1:
-#    time.sleep(1)
-#    print root.bind()
-#    root.event_generate('<<Ping>>', when='tail')
-#    print "it worked"
-
-
-#v = Tkinter.BooleanVar()
-#v.set(0)
-#def gotPing(event):
-#  v.set(not v.get())
-
-#check = Tkinter.Checkbutton(root, variable=v, text='Ping!')
-#check.pack(side=Tkinter.TOP)
-#butto = Tkinter.Button(root, text='Quit', command=root.quit)
-#butto.pack(side=Tkinter.TOP)
-#s = "Test"
-#l = Tkinter.Label(root,text=s)
-#l.pack(side=Tkinter.TOP)
-
-#root.bind('<<Ping>>', gotPing)
-#th = threading.Thread(target=ping)
-#th.setDaemon(1)
-#th.start()

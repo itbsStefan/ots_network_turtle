@@ -1,8 +1,9 @@
 from chat_echo import EchoClient
 import asyncore
 import sys
-
-
+#
+# file to start a client connect with Turtelwindowserver and send Messages
+#
 fp = open('PortAsynTest.txt', 'r')
 fport = fp.read().decode("utf-8")
 fp.close
