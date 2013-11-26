@@ -36,8 +36,8 @@ class EchoHandler(asynchat.async_chat):
 
     # Artificially reduce buffer sizes to illustrate
     # sending and receiving partial messages.
-    ac_in_buffer_size = 64
-    ac_out_buffer_size = 64
+    ac_in_buffer_size = 32
+    ac_out_buffer_size = 128
     
     def __init__(self, sock):
         self.received_data = []
@@ -84,7 +84,7 @@ class EchoClient(asynchat.async_chat):
     # Artificially reduce buffer sizes to illustrate
     # sending and receiving partial messages.
     ac_in_buffer_size = 64
-    ac_out_buffer_size = 64
+    ac_out_buffer_size = 128
 
     myport = None
     

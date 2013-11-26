@@ -3,7 +3,7 @@ from random import choice    # Choose a random element from a non-empty sequence
 from random import randint   # Return random integer in range [a, b], including both end points
 from string import lowercase # Rerurns 'abcdefghijklmnopqrstuvwxyz'
 
-def randomString(self, length = 5):
+def randomString(length = 5):
   return "".join(choice(lowercase) for i in range(length))
 
 

@@ -151,6 +151,15 @@ def asynClientTask(event=None):
 root.after(3, asynloopStart)
 root.bind("c", asynClientTask)
 
+
+def clientSendMessage(event=None):
+  global ip, port
+  message = h.randomString(256)
+  print "call EchoClient with long message", ip, port
+  client = EchoClient(ip, port, message)
+root.bind("C", clientSendMessage)
+
+
 root.mainloop()
 
 

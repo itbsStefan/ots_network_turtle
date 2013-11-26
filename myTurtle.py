@@ -15,6 +15,23 @@ def show(dictionary):
   print "=========================="
   print
 
+from turtle import *
+def n_eck(n, size):
+  for i in range(n):
+    rt(360./n)
+    fd(size)
+def mn_eck(n, size):
+  for i in range(n):
+    rt(360./n)
+    n_eck(n, size)
+
+#bgcolor("black")
+pencolor("red")
+pensize(3)
+speed(10)
+#mn_eck(36, 20)
+
+
 
 a=2
 b=4
@@ -254,6 +271,45 @@ t2.setheading(180)
 
 show(turtle._CFG)
 print "use curserkeys to move turtle1 and  w|a|s|d for tutle2 (purple)"
+
+
+def line(x1, y1, x2, y2):
+  pu(); goto(x1, y1); pd(); goto(x2, y2)
+def graph(f):
+  x = -4
+  pu(); goto(x, f(x)); pd()
+  while x < 4:
+    x += 0.1
+    goto(x, f(x))
+
+setworldcoordinates(-4,-2,4,2)
+line(-4,0,4,0)
+line(0,-2,0,2)
+pensize(3)
+from math import cos
+graph(cos)
+dx = 1.e-6
+def derivative(f):
+  def d(x):
+    return (f(x+dx)-f(x))/dx
+  return d
+pencolor("red")
+graph(derivative(cos))
+
+
+
+
+reset()
+shape("circle")
+pu(); goto(150,0)
+fillcolor("red")
+shapesize(5, 1, 4)
+for i in range(72):
+    fd(12)
+    lt(5)
+    tilt(7.5)
+    dummy = stamp()
+
 
 
 
