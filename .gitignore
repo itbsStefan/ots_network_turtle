@@ -3,6 +3,11 @@
 # C extensions
 *.so
 
+# ots_network_turtle
+PortAsynTest.txt
+md.py
+mydoc*
+
 # Packages
 *.egg
 *.egg-info
