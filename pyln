@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# Zum anlegen eines Links im Pfad (wo auch das pyln Script liegen sollte) 
+# um so Pythonscripts ohne ./ und .py einfach mit dem Namen aufrufen zu koennen
+# CC by SA 2012 Stefan Gehrmann  
+#
+parameter=$@
+pfad=`pwd`
+devapp=`which pyln` # bei mir /home/stefan/bin/pyln
+if [ $0 = $devapp ]; then
+  if [ $# -ne 1 ]; then
+    echo "To make a new Link for a Pythonscripts give a Filename as first parameter!"
+    exit
+  fi
+  `echo $1 | grep -qE ".py$"`
+  if [ $? -eq 1 ]; then
+    f=$1
+  else
+    echo "Filename ends with .py ( it will be shorten )!"
+    gl=${#1}
+    f=${1:0:$((gl-3))}
+    echo "Linkname is now $f."
+  fi
+  if [ -f $pfad/$f.py ]; then
+    lnkapp=`dirname $devapp`/$f
+    `ln -s -T $devapp $lnkapp`
+    echo "Link created as $lnkapp ( delete with $f rm )"
+  else
+    echo "The given Linkname must be a file like $f.py in this Folder."
+  fi  
+  exit
+else
+  if [ $# -eq 1 ]; then
+    if [ $1 = "rm" ]; then
+      `file $0 | grep -q "symbolic link"`
+      if [ $? -eq 0 ]; then
+        `rm $0` 
+        echo "Link $0 is removed."
+      else
+        echo "Delete only for symbolic link allowed. $0 $?"
+      fi
+      exit
+    fi
+  fi
+fi
+oIFS=$IFS
+IFS=/
+ary=($0)
+IFS=$oIFS
+cnt=${#ary[@]} 
+dateiname=${ary[$cnt-1]}
+p="python --version"
+if [ -f $pfad/$dateiname.py ]; then
+  echo ------ starting python  $pfad/$dateiname.py $parameter
+  python $pfad/$dateiname.py $parameter
+  echo ------ end of $dateiname.py
+else
+  echo "This Link runs only, if there is the same file like $dateiname.py in your working directory."
+fi
